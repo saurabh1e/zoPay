@@ -1,32 +1,28 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ConferenceData } from '../../providers/conference-data';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ConferenceData} from '../../providers/conference-data';
+import {DataService} from '../../providers/data.service';
 
 @Component({
   selector: 'page-speaker-detail',
   templateUrl: 'speaker-detail.html',
   styleUrls: ['./speaker-detail.scss'],
 })
-export class SpeakerDetailPage {
-  speaker: any;
+export class SpeakerDetailPage implements OnInit {
+  users: any;
 
   constructor(
     private dataProvider: ConferenceData,
     private router: Router,
+    private http: DataService,
     private route: ActivatedRoute
   ) {}
 
-  ionViewWillEnter() {
-    this.dataProvider.load().subscribe((data: any) => {
-      const speakerId = this.route.snapshot.paramMap.get('speakerId');
-      if (data && data.speakers) {
-        for (const speaker of data.speakers) {
-          if (speaker && speaker.id === speakerId) {
-            this.speaker = speaker;
-            break;
-          }
-        }
-      }
-    });
+  async ngOnInit() {
+    const res = await this.http.query({
+      __only: ['id', 'first_name', 'last_name', 'fixed_due', 'subscriptions'],
+      __include: ['fixed_dues', 'subscriptions']
+    }, 'user');
+    this.users = res.data;
   }
 }
