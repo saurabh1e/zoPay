@@ -17,6 +17,7 @@ export class AuthService extends HttpService<any> {
   async login(username: string, password: string): Promise<any> {
     try {
       const res = await this.create({mobile_number: username, password: password}, {}, 'login/');
+      console.log(res);
       return this.storage.set('auth_token', res['authentication_token']).then(() => {
         this.storage.set('user', res['user']).then();
         this.user = res['user'];

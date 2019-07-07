@@ -1,9 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { ActionSheetController } from '@ionic/angular';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
+import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
+import {ActionSheetController} from '@ionic/angular';
 
-import { ConferenceData } from '../../providers/conference-data';
+import {ConferenceData} from '../../providers/conference-data';
+import {DataService} from '../../providers/data.service';
 
 @Component({
   selector: 'page-speaker-list',
@@ -11,19 +12,22 @@ import { ConferenceData } from '../../providers/conference-data';
   styleUrls: ['./speaker-list.scss'],
 })
 export class SpeakerListPage {
-  speakers: any[] = [];
+  users: any[] = [];
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
     public confData: ConferenceData,
+    private http: DataService,
     public inAppBrowser: InAppBrowser,
     public router: Router
   ) {}
 
-  ionViewDidEnter() {
-    this.confData.getSpeakers().subscribe((speakers: any[]) => {
-      this.speakers = speakers;
-    });
+  async ionViewDidEnter() {
+    const res = await this.http.query({
+      __only: ['id', 'first_name', 'last_name', 'fixed_due', 'subscriptions'],
+      __include: ['fixed_dues', 'subscriptions']
+    }, 'user');
+    this.users = res.data;
   }
 
   goToSpeakerTwitter(speaker: any) {
