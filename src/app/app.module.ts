@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
@@ -11,6 +11,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import {AuthGuard} from './providers/auth-gaurd.service';
+import {APP_BASE_HREF} from '@angular/common';
+import {Interceptor} from './providers/http.interceptor';
 
 @NgModule({
   imports: [
@@ -24,7 +27,10 @@ import { environment } from '../environments/environment';
     })
   ],
   declarations: [AppComponent],
-  providers: [InAppBrowser, SplashScreen, StatusBar],
+  providers: [InAppBrowser, SplashScreen, StatusBar,
+    AuthGuard,
+    { provide: APP_BASE_HREF, useValue: '/' },
+    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

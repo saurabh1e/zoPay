@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CheckTutorial } from './providers/check-tutorial.service';
+import {AuthGuard} from './providers/auth-gaurd.service';
 
 const routes: Routes = [
   {
@@ -8,14 +9,14 @@ const routes: Routes = [
     redirectTo: '/tutorial',
     pathMatch: 'full'
   },
-  {
-    path: 'account',
-    loadChildren: './pages/account/account.module#AccountModule'
-  },
-  {
-    path: 'support',
-    loadChildren: './pages/support/support.module#SupportModule'
-  },
+  // {
+  //   path: 'account',
+  //   loadChildren: './pages/account/account.module#AccountModule'
+  // },
+  // {
+  //   path: 'support',
+  //   loadChildren: './pages/support/support.module#SupportModule'
+  // },
   {
     path: 'login',
     loadChildren: './pages/login/login.module#LoginModule'
@@ -26,12 +27,13 @@ const routes: Routes = [
   },
   {
     path: 'app',
+    canLoad: [AuthGuard],
     loadChildren: './pages/tabs-page/tabs-page.module#TabsModule'
   },
   {
     path: 'tutorial',
+    canLoad: [AuthGuard],
     loadChildren: './pages/tutorial/tutorial.module#TutorialModule',
-    canLoad: [CheckTutorial]
   }
 ];
 
