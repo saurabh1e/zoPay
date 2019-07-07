@@ -1,24 +1,24 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
+<!--  <ion-toolbar>-->
+<!--    <ion-buttons slot="start">-->
+<!--      <ion-menu-button></ion-menu-button>-->
+<!--    </ion-buttons>-->
 
-    <ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
-      <ion-segment-button value="all">
-        All
-      </ion-segment-button>
-      <ion-segment-button value="favorites">
-        Favorites
-      </ion-segment-button>
-    </ion-segment>
+<!--    <ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">-->
+<!--      <ion-segment-button value="all">-->
+<!--        All-->
+<!--      </ion-segment-button>-->
+<!--      <ion-segment-button value="favorites">-->
+<!--        Favorites-->
+<!--      </ion-segment-button>-->
+<!--    </ion-segment>-->
 
-    <ion-buttons slot="end">
-      <ion-button (click)="presentFilter()">
-        <ion-icon slot="icon-only" name="options"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+<!--    <ion-buttons slot="end">-->
+<!--      <ion-button (click)="presentFilter()">-->
+<!--        <ion-icon slot="icon-only" name="options"></ion-icon>-->
+<!--      </ion-button>-->
+<!--    </ion-buttons>-->
+<!--  </ion-toolbar>-->
 
   <ion-toolbar>
     <ion-searchbar [(ngModel)]="queryText" (ionChange)="updateSchedule()" placeholder="Search"></ion-searchbar>
@@ -36,6 +36,7 @@
       <ion-item-sliding *ngFor="let session of group.sessions" #slidingItem [attr.track]="session.tracks[0] | lowercase" [hidden]="session.hide">
         <ion-item routerLink="/app/tabs/schedule/session/{{session.id}}">
           <ion-label>
+            {{session.tracks[0]}}
             <h3>{{session.name}}</h3>
             <p>
               {{session.timeStart}} &mdash; {{session.timeEnd}}: {{session.location}}
