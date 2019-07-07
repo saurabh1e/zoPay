@@ -7,39 +7,124 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding-top ion-margin-top">
 
   <div class="signup-logo">
     <img src="assets/img/appicon.svg" alt="Ionic Logo">
   </div>
 
-  <form #signupForm="ngForm" novalidate>
+  <form #signUpForm="ngForm" *ngIf="!otp">
     <ion-list lines="none">
+
+
       <ion-item>
-        <ion-label position="stacked" color="primary">Username</ion-label>
-        <ion-input [(ngModel)]="signup.username" name="username" type="text" #username="ngModel" required>
+        <ion-label position="stacked" color="primary">Phone *</ion-label>
+        <ion-input [(ngModel)]="signUp.mobile_number" name="phone" type="number" #phone="ngModel" required minlength="10">
         </ion-input>
       </ion-item>
       <ion-text color="danger">
-        <p [hidden]="username.valid || submitted == false" class="ion-padding-start">
-          Username is required
-        </p>
+        <!--<p [hidden]="phone.valid || submitted == false" class="ion-padding-start">-->
+          <!--Phone is required-->
+        <!--</p>-->
+      </ion-text>
+
+
+      <ion-item>
+        <ion-label position="stacked" color="primary">First Name *</ion-label>
+        <ion-input [(ngModel)]="signUp.first_name" name="first" type="text" #first_name="ngModel" required>
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger">
+        <!--<p [hidden]="first_name.valid || submitted == false" class="ion-padding-start">-->
+          <!--First Name is required-->
+        <!--</p>-->
+      </ion-text>
+
+
+      <ion-item>
+        <ion-label position="stacked" color="primary">Last Name </ion-label>
+        <ion-input [(ngModel)]="signUp.last_name" name="last" type="text" #last_name="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger">
+        <!--<p [hidden]="last_name.valid || submitted == false" class="ion-padding-start">-->
+
+        <!--</p>-->
+      </ion-text>
+
+
+      <ion-item>
+        <ion-label position="stacked" color="primary">Business Name *</ion-label>
+        <ion-input [(ngModel)]="signUp.business_name" name="business" type="text" #business_name="ngModel" required>
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger">
+        <!--<p [hidden]="business_name.valid || submitted == false" class="ion-padding-start">-->
+        <!--Business name is required-->
+        <!--</p>-->
+      </ion-text>
+
+
+      <ion-item>
+        <ion-label position="stacked" color="primary">Email </ion-label>
+        <ion-input [(ngModel)]="signUp.email" name="email" type="text" #email="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger">
+        <!--<p [hidden]="email.valid || submitted == false" class="ion-padding-start">-->
+
+        <!--</p>-->
       </ion-text>
 
       <ion-item>
-        <ion-label position="stacked" color="primary">Password</ion-label>
-        <ion-input [(ngModel)]="signup.password" name="password" type="password" #password="ngModel" required>
+        <ion-label position="stacked" color="primary">Password *</ion-label>
+        <ion-input [(ngModel)]="signUp.password" name="password" type="password" #password="ngModel" required>
         </ion-input>
       </ion-item>
       <ion-text color="danger">
-        <p [hidden]="password.valid || submitted == false" class="ion-padding-start">
-          Password is required
-        </p>
+        <!--<p [hidden]="password.valid || submitted == false" class="ion-padding-start">-->
+          <!--Password is required-->
+        <!--</p>-->
       </ion-text>
     </ion-list>
 
     <div class="ion-padding">
-      <ion-button (click)="onSignup(signupForm)" type="submit" expand="block">Create</ion-button>
+      <ion-button [disabled]="!!signUpForm.form.invalid"
+        (click)="onSignUp(signUpForm)" type="submit" expand="block">Sign Up</ion-button>
+    </div>
+  </form>
+
+  <form #verifyForm="ngForm" *ngIf="otp">
+    <ion-list lines="none">
+
+
+      <ion-item [hidden]="1">
+        <ion-label position="stacked" color="primary">Phone *</ion-label>
+        <ion-input [(ngModel)]="signUp.mobile_number" name="phone" type="number" #phone="ngModel" required minlength="10">
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger">
+        <!--<p [hidden]="phone.valid || submitted == false" class="ion-padding-start">-->
+        <!--Phone is required-->
+        <!--</p>-->
+      </ion-text>
+
+
+      <ion-item>
+        <ion-label position="stacked" color="primary">OTP</ion-label>
+        <ion-input [(ngModel)]="signUp.otp" name="password" type="number" #otp="ngModel" required>
+        </ion-input>
+      </ion-item>
+      <ion-text color="danger">
+        <!--<p [hidden]="password.valid || submitted == false" class="ion-padding-start">-->
+        <!--Password is required-->
+        <!--</p>-->
+      </ion-text>
+    </ion-list>
+
+    <div class="ion-padding">
+      <ion-button [disabled]="!!verifyForm.form.invalid"
+                  (click)="onVerify(verifyForm)" type="submit" expand="block">Verify</ion-button>
     </div>
   </form>
 

@@ -3,10 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { UserData } from '../../providers/user-data';
-
-import { UserOptions } from '../../interfaces/user-options';
-
-
+import {AuthService} from '../../providers/auth.service';
 
 @Component({
   selector: 'page-login',
@@ -14,20 +11,23 @@ import { UserOptions } from '../../interfaces/user-options';
   styleUrls: ['./login.scss'],
 })
 export class LoginPage {
-  login: UserOptions = { username: '', password: '' };
+  login: any = { phone: null, password: null };
   submitted = false;
 
   constructor(
+    private auth: AuthService,
     public userData: UserData,
     public router: Router
   ) { }
 
   onLogin(form: NgForm) {
-    this.submitted = true;
-
+    console.log(form, form.valid, this.login);
     if (form.valid) {
-      this.userData.login(this.login.username);
-      this.router.navigateByUrl('/app/tabs/schedule');
+      this.auth.login(this.login.phone.toString(), this.login.password).then( (r) => {
+        console.log(r);
+        this.router.navigateByUrl('/app/tabs/schedule');
+      });
+
     }
   }
 
