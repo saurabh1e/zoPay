@@ -1,12 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {AlertController, IonList, LoadingController, ModalController, ToastController} from '@ionic/angular';
-
-import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
-import {ConferenceData} from '../../providers/conference-data';
+import {AlertController, IonList, ModalController} from '@ionic/angular';
 import {UserData} from '../../providers/user-data';
 import {DataService} from '../../providers/data.service';
 import * as moment from 'moment';
+import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
 
 @Component({
   selector: 'page-schedule',
@@ -18,25 +16,15 @@ export class SchedulePage {
   @ViewChild('scheduleList') scheduleList: IonList;
 
   objectKeys = Object.keys;
-
-  dayIndex = 0;
   queryText = '';
-  segment = 'all';
-  excludeTracks: any = [];
-  shownSessions: any = [];
-  groups: any = [];
-  confDate: string;
   dues: any = {};
 
 
   constructor(
     public alertCtrl: AlertController,
-    public confData: ConferenceData,
-    public loadingCtrl: LoadingController,
     public modalCtrl: ModalController,
     public router: Router,
     private http: DataService,
-    public toastCtrl: ToastController,
     public user: UserData
   ) {
   }
@@ -70,35 +58,22 @@ export class SchedulePage {
 
   }
 
-  async presentFilter() {
-    const modal = await this.modalCtrl.create({
-      component: ScheduleFilterPage,
-      componentProps: {excludedTracks: this.excludeTracks}
-    });
-    await modal.present();
-
-    const {data} = await modal.onWillDismiss();
-    if (data) {
-      this.excludeTracks = data;
-    }
-  }
-
   async addFavorite(slidingItem: HTMLIonItemSlidingElement, due: any, key: string) {
 
-      // create an alert instance
-      const alert = await this.alertCtrl.create({
-        header: 'Due Cleared',
-        buttons: [{
-          text: 'OK',
-          handler: () => {
-            // close the sliding item
-            slidingItem.close();
-            this.dues[key].splice(this.dues[key].indexOf(due), 1);
-          }
-        }]
-      });
-      // now present the alert on top of all other content
-      await alert.present();
+    // create an alert instance
+    const alert = await this.alertCtrl.create({
+      header: 'Due Cleared',
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          // close the sliding item
+          slidingItem.close();
+          this.dues[key].splice(this.dues[key].indexOf(due), 1);
+        }
+      }]
+    });
+    // now present the alert on top of all other content
+    await alert.present();
 
   }
 
@@ -132,13 +107,21 @@ export class SchedulePage {
     await alert.present();
   }
 
-  async openSocial(network: string, fab: HTMLIonFabElement) {
-    const loading = await this.loadingCtrl.create({
-      message: `Posting to ${network}`,
-      duration: (Math.random() * 1000) + 500
-    });
-    await loading.present();
-    await loading.onWillDismiss();
+  async createDue(transactionType: string, fab) {
     fab.close();
+    const model = await this.modalCtrl.create({
+      component: ScheduleFilterPage,
+      componentProps: {transaction_type: transactionType}
+    });
+    model.onDidDismiss().then((data: any) => {
+      if (data.data) {
+        if (this.dues.hasOwnProperty(data.data.due_date)) {
+          this.dues[data.data.due_date].push(data.data);
+        } else {
+          this.dues[data.data.due_date] = [data.data];
+        }
+      }
+    });
+    return await model.present();
   }
 }

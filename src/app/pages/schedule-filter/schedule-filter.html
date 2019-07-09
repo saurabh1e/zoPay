@@ -1,42 +1,76 @@
 <ion-header translucent>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button *ngIf="ios" (click)="dismiss()">Cancel</ion-button>
-      <ion-button *ngIf="!ios" (click)="selectAll(false)">Reset</ion-button>
-    </ion-buttons>
 
     <ion-title>
-      Filter Sessions
+      {{transaction_type === 'fixed' ? 'One Time Payment' : 'Subscription'}}
     </ion-title>
 
-    <ion-buttons slot="end">
-      <ion-button (click)="applyFilters()" strong>Done</ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
+  <form #dueForm="ngForm">
+    <ion-list>
 
-  <ion-list [lines]="ios ? 'inset' : 'full'">
-    <ion-list-header>Tracks</ion-list-header>
+      <ion-item>
+        <ion-input placeholder="Title" [(ngModel)]="due.name" name="name" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input placeholder="Amount" [(ngModel)]="due.amount" type="number" min="1" name="amount"
+                   required></ion-input>
+      </ion-item>
 
-    <ion-item *ngFor="let track of tracks" [attr.track]="track.name | lowercase">
-      <ion-icon *ngIf="ios" slot="start" [name]="track.icon" color="medium"></ion-icon>
-      <ion-label>{{track.name}}</ion-label>
-      <ion-checkbox [(ngModel)]="track.isChecked"></ion-checkbox>
+
+      <ion-item>
+        <ion-label>{{transaction_type === 'fixed' ? 'Due' : 'Start'}} Date</ion-label>
+        <ion-datetime required value="2019-07-09"
+                      (ionChange)="changeDate($event)" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+      <ion-item *ngIf="transaction_type === 'subscription'">
+        <ion-label>Period (months)</ion-label>
+        <ion-input placeholder="Period" [(ngModel)]="due.months" type="number" min="1" name="months"
+                   required></ion-input>
+
+      </ion-item>
+    </ion-list>
+
+    <ion-item>
+      <ion-row class="ion-align-items-center">
+        <ion-col>
+          <ion-searchbar type="text" placeholder="search customer"
+                         debounce="500" (ionInput)="getResults($event)"></ion-searchbar>
+        </ion-col>
+
+
+        <ion-col [size]="4">
+          <ion-button (click)="addNewCustomer()">Add New</ion-button>
+        </ion-col>
+      </ion-row>
+
     </ion-item>
 
-  </ion-list>
+    <ion-item *ngIf="customers.length">
 
+      <ion-list style="width: 100%">
+        <ion-item *ngFor="let customer of customers">
+          <ion-button (click)="setCustomer(customer.id)" [size]="'small'"
+                      [expand]="'block'" [fill]="due.customer_id === customer.id ? 'solid' : 'clear'">
+            {{ customer?.first_name }} &nbsp; {{customer?.mobile_number}}
+          </ion-button>
+        </ion-item>
+
+      </ion-list>
+    </ion-item>
+  </form>
 </ion-content>
 
-<ion-footer translucent *ngIf="ios">
+<ion-footer>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="selectAll(false)">Deselect All</ion-button>
+      <ion-button (click)="dismiss()">Cancel</ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="selectAll(true)">Select All</ion-button>
+      <ion-button [disabled]="dueForm.form.invalid || !due.customer_id" (click)="applyFilters()">Save</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

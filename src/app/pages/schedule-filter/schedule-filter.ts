@@ -1,7 +1,6 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { Config, ModalController, NavParams } from '@ionic/angular';
-
-import { ConferenceData } from '../../providers/conference-data';
+import {AfterViewInit, Component} from '@angular/core';
+import {AlertController, Config, ModalController} from '@ionic/angular';
+import {DataService} from '../../providers/data.service';
 
 
 @Component({
@@ -11,52 +10,147 @@ import { ConferenceData } from '../../providers/conference-data';
 })
 export class ScheduleFilterPage implements AfterViewInit {
   ios: boolean;
+  transaction_type: string;
+  due: any = {name: null, due_date: new Date(), transaction_type: null, amount: null, customer_id: null, months: null};
+  tracks: { name: string, icon: string, isChecked: boolean }[] = [];
+  customers: any[] = [];
 
-  tracks: {name: string, icon: string, isChecked: boolean}[] = [];
 
   constructor(
-    public confData: ConferenceData,
     private config: Config,
+    private http: DataService,
+    private alertController: AlertController,
     public modalCtrl: ModalController,
-    public navParams: NavParams
-  ) { }
+  ) {
+  }
 
   ionViewWillEnter() {
-    this.ios = this.config.get('mode') === `ios`;
+
   }
 
   // TODO use the ionViewDidEnter event
   ngAfterViewInit() {
     // passed in array of track names that should be excluded (unchecked)
-    const excludedTrackNames = this.navParams.get('excludedTracks');
-
-    this.confData.getTracks().subscribe((tracks: any[]) => {
-      tracks.forEach(track => {
-        this.tracks.push({
-          name: track.name,
-          icon: track.icon,
-          isChecked: (excludedTrackNames.indexOf(track.name) === -1)
-        });
-      });
-    });
   }
 
-  selectAll(check: boolean) {
-    // set all to checked or unchecked
-    this.tracks.forEach(track => {
-      track.isChecked = check;
-    });
-  }
-
-  applyFilters() {
-    // Pass back a new array of track names to exclude
-    const excludedTrackNames = this.tracks.filter(c => !c.isChecked).map(c => c.name);
-    this.dismiss(excludedTrackNames);
+  async applyFilters() {
+    this.due.transaction_type = this.transaction_type;
+    const res = await this.http.create(this.due, {__only: ['id', 'amount', 'customer', 'due_date']}, 'due');
+    this.dismiss(res.data[0]);
   }
 
   dismiss(data?: any) {
     // using the injected ModalController this page
     // can "dismiss" itself and pass back data
     this.modalCtrl.dismiss(data);
+  }
+
+  async getResults(ev: any) {
+    try {
+      const res = await this.http.query({
+        __first_name__starts_with: ev.target.value,
+        __only: ['id', 'first_name', 'mobile_number']
+      }, 'user');
+      this.customers = res.data;
+
+    } catch (e) {
+      this.customers = [];
+    }
+  }
+
+  async addNewCustomer() {
+
+    const alert = await this.alertController.create({
+      header: 'Add Customer',
+      inputs: [
+        {
+          name: 'first_name',
+          type: 'text',
+          placeholder: 'Customer Name'
+        },
+        {
+          name: 'mobile_number',
+          type: 'number',
+          id: 'name2-id',
+          value: '',
+          placeholder: 'Phone Number'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: async (a) => {
+            if (a) {
+              try {
+                a['mobile_number'] = a['mobile_number'].toString();
+                await this.http.create(a, {}, 'customer_register/');
+                await this.verifyCustomer(a['mobile_number']);
+              } catch (e) {
+              }
+
+            }
+
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async verifyCustomer(phone: string) {
+    const alert = await this.alertController.create({
+      header: 'Verify Customer',
+      inputs: [
+        {
+          name: 'otp',
+          type: 'number',
+          id: 'name2-id',
+          value: '',
+          placeholder: 'OTP'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Ok',
+          handler: async (a) => {
+            if (a) {
+              try {
+                a['mobile_number'] = phone;
+                const res = await this.http.create(a, {}, 'customer_verify/');
+                this.customers = [res];
+              } catch (e) {
+              }
+
+            }
+
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  setCustomer(customerId: number) {
+    this.due.customer_id = customerId;
+  }
+
+  changeDate(ev) {
+    console.log(ev);
+    this.due.due_date = ev.detail.value;
   }
 }
