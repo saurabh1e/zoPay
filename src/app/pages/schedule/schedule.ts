@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {AlertController, IonList, ModalController} from '@ionic/angular';
 import {UserData} from '../../providers/user-data';
@@ -10,6 +10,7 @@ import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
   selector: 'page-schedule',
   templateUrl: 'schedule.html',
   styleUrls: ['./schedule.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SchedulePage {
   // Gets a reference to the list element
@@ -25,7 +26,8 @@ export class SchedulePage {
     public modalCtrl: ModalController,
     public router: Router,
     private http: DataService,
-    public user: UserData
+    public user: UserData,
+    private changeRef: ChangeDetectorRef
   ) {
   }
 
@@ -35,9 +37,10 @@ export class SchedulePage {
 
   async getDues() {
     try {
+      this.dues = {};
       const res = await this.http.query({
         __order_by: 'due_date', __is_cancelled__bool: false,
-        __is_paid__bool: false
+        __is_paid__bool: false, __customer_name__contains: this.queryText,
       }, 'due');
       res.data.forEach(d => {
         const diff: number = moment().local().diff(d.due_date, 'days');
@@ -53,7 +56,10 @@ export class SchedulePage {
           this.dues[d.due_date] = [d];
         }
       });
+
     } catch (e) {
+    } finally {
+      this.changeRef.detectChanges();
     }
 
   }
@@ -62,25 +68,40 @@ export class SchedulePage {
 
     // create an alert instance
     const alert = await this.alertCtrl.create({
-      header: 'Due Cleared',
+      header: 'Are you sure?',
       buttons: [{
         text: 'OK',
-        handler: () => {
+        handler: async () => {
           // close the sliding item
+
+          try {
+            await this.http.create({razor_pay_id: null, due_id: due.id}, {}, 'payment');
+            console.log(this.dues[key].findIndex(d => d.id === due.id));
+            this.dues[key].splice(this.dues[key].findIndex(d => d.id === due.id), 1);
+            this.changeRef.detectChanges();
+          } catch (e) {
+            console.error(e);
+          }
           slidingItem.close();
-          this.dues[key].splice(this.dues[key].indexOf(due), 1);
         }
-      }]
+      },
+        {
+          text: 'CANCEL',
+          handler: () => {
+            // close the sliding item
+            slidingItem.close();
+          }
+        }]
     });
     // now present the alert on top of all other content
     await alert.present();
 
   }
 
-  async removeFavorite(slidingItem: HTMLIonItemSlidingElement, sessionData: any, title: string) {
+  async removeFavorite(slidingItem: HTMLIonItemSlidingElement, due: any, key: string) {
     const alert = await this.alertCtrl.create({
-      header: title,
-      message: 'Would you like to remove this session from your favorites?',
+      header: 'Are you sure?',
+      message: 'Would you like to cancel this payment?',
       buttons: [
         {
           text: 'Cancel',
@@ -92,9 +113,15 @@ export class SchedulePage {
         },
         {
           text: 'Remove',
-          handler: () => {
+          handler: async () => {
             // they want to remove this session from their favorites
-            this.user.removeFavorite(sessionData.name);
+            try {
+              const res = await this.http.update(due.id, {is_cancelled: true}, {}, 'due');
+              this.dues[key].splice(this.dues[key].findIndex(d => d.id === due.id), 1);
+              this.changeRef.detectChanges();
+            } catch (e) {
+              console.error(e);
+            }
             // this.updateSchedule();
 
             // close the sliding item and hide the option buttons
@@ -120,6 +147,7 @@ export class SchedulePage {
         } else {
           this.dues[data.data.due_date] = [data.data];
         }
+        this.changeRef.detectChanges();
       }
     });
     return await model.present();
