@@ -1,11 +1,16 @@
 {
-  "name": "Pay Nudge",
-  "short_name": "Pay Nudge",
+  "name": "Ionic Conference",
+  "short_name": "Ionic Conference",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [
     {
-      "src": "assets/img/logo.png",
+      "src": "assets/img/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

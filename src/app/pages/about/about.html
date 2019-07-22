@@ -16,6 +16,30 @@
   <div class="about-info">
     <img src="assets/img/logo.png" >
   </div>
+
+
+  <form (ngSubmit)="CreateOrUpdate()">
+    <ion-item>
+      <ion-label>Bank Name</ion-label>
+      <ion-input [(ngModel)]="bankDetails.bank_name" name="bank_name" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Account Number</ion-label>
+      <ion-textarea [(ngModel)]="bankDetails.account_no" name="account_number"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Branch Name</ion-label>
+      <ion-textarea [(ngModel)]="bankDetails.branch_name" name="branch_name"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label>IFSC Code</ion-label>
+      <ion-textarea [(ngModel)]="bankDetails.ifsc_code" name="ifsc_code"></ion-textarea>
+    </ion-item>
+
+    <button block ion-button type="submit">Save</button>
+  </form>
 <!--  <div class="about-info">-->
 <!--    <h4 class="ion-padding-start">Ionic Conference</h4>-->
 

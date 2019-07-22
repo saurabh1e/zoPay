@@ -28,8 +28,9 @@ import {DataService} from './providers/data.service';
   declarations: [AppComponent],
   providers: [InAppBrowser, SplashScreen, StatusBar,
     AuthGuard, DataService,
-    { provide: APP_BASE_HREF, useValue: '/' },
-    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}],
+    {provide: APP_BASE_HREF, useValue: '/'},
+    {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true}],
+  exports: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

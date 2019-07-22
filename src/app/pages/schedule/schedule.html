@@ -21,7 +21,7 @@
   <!--</ion-toolbar>-->
 
   <ion-toolbar>
-    <ion-searchbar [(ngModel)]="queryText" placeholder="Search"></ion-searchbar>
+    <ion-searchbar (ionChange)="getDues()" [(ngModel)]="queryText" placeholder="Search"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -47,7 +47,7 @@
             Mark Paid
           </ion-item-option>
 
-          <ion-item-option color="danger" (click)="addFavorite(slidingItem, due, key)">
+          <ion-item-option (click)="removeFavorite(slidingItem, due, key)" color="danger">
             Cancel
           </ion-item-option>
         </ion-item-options>
