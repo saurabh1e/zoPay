@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "ionic-ng-conf-app"
+    "default": "ionic-ng-conf-app",
+    "partnerPayNudge": "posify-d5434"
   }
 }

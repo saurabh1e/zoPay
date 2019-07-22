@@ -1,8 +1,8 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Component} from '@angular/core';
+import {NgForm} from '@angular/forms';
+import {Router} from '@angular/router';
 
-import { UserData } from '../../providers/user-data';
+import {UserData} from '../../providers/user-data';
 import {AuthService} from '../../providers/auth.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class LoginPage {
     if (form.valid) {
       this.auth.login(this.login.phone.toString(), this.login.password).then( (r) => {
         console.log(r);
-        this.router.navigateByUrl('/app/tabs/schedule');
+        this.router.navigateByUrl('/tutorial');
       });
 
     }

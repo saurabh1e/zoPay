@@ -23,9 +23,7 @@ import {DataService} from './providers/data.service';
     HttpClientModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production
-    })
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production})
   ],
   declarations: [AppComponent],
   providers: [InAppBrowser, SplashScreen, StatusBar,

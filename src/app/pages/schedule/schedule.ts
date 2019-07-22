@@ -39,6 +39,7 @@ export class SchedulePage {
         __order_by: 'due_date', __is_cancelled__bool: false,
         __is_paid__bool: false
       }, 'due');
+      this.dues = {};
       res.data.forEach(d => {
         const diff: number = moment().local().diff(d.due_date, 'days');
         if (diff > 0) {
