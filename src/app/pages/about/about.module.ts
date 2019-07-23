@@ -13,7 +13,7 @@ import {AboutPageRoutingModule} from './about-routing.module';
     FormsModule,
     IonicModule,
     AboutPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [AboutPage, PopoverPage],
   entryComponents: [PopoverPage],
