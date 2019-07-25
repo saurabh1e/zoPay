@@ -13,53 +13,26 @@
 
   <form (ngSubmit)="CreateOrUpdate()">
     <ion-item>
-      <ion-label>Bank Name:</ion-label>
+      <ion-label style="font-weight: bold;">Bank Name : </ion-label>
       <ion-input [(ngModel)]="bankDetails.bank_name" name="bank_name" type="text"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Account Number:</ion-label>
+      <ion-label style="font-weight: bold;">Account Number : </ion-label>
       <ion-textarea [(ngModel)]="bankDetails.account_no" name="account_number"></ion-textarea>
     </ion-item>
 
     <ion-item>
-      <ion-label>Branch Name:</ion-label>
+      <ion-label style="font-weight: bold;">Branch Name : </ion-label>
       <ion-textarea [(ngModel)]="bankDetails.branch_name" name="branch_name"></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-label>IFSC Code:</ion-label>
+      <ion-label style="font-weight: bold;">IFSC Code : </ion-label>
       <ion-textarea [(ngModel)]="bankDetails.ifsc_code" name="ifsc_code"></ion-textarea>
     </ion-item>
 
-    <button block ion-button type="submit">Save</button>
+
+    <ion-button type="submit" style="width: 50%; margin-left: 25%;  margin-right: 25%; margin-top: 20px;" expand="block" >Save</ion-button>
+
   </form>
-<!--  <div class="about-info">-->
-<!--    <h4 class="ion-padding-start">Ionic Conference</h4>-->
-
-<!--    <ion-list lines="none">-->
-<!--      <ion-item>-->
-<!--        <ion-icon name="calendar" slot="start"></ion-icon>-->
-<!--        <ion-label position="stacked">Date</ion-label>-->
-<!--        <ion-datetime displayFormat="MMM DD, YYYY" max="2056" [(ngModel)]="conferenceDate"></ion-datetime>-->
-<!--      </ion-item>-->
-
-<!--      <ion-item>-->
-<!--        <ion-icon name="pin" slot="start"></ion-icon>-->
-<!--        <ion-label position="stacked">Location</ion-label>-->
-<!--        <ion-select>-->
-<!--          <ion-select-option value="madison" selected>Madison, WI</ion-select-option>-->
-<!--          <ion-select-option value="austin">Austin, TX</ion-select-option>-->
-<!--          <ion-select-option value="chicago">Chicago, IL</ion-select-option>-->
-<!--          <ion-select-option value="seattle">Seattle, WA</ion-select-option>-->
-<!--        </ion-select>-->
-<!--      </ion-item>-->
-<!--    </ion-list>-->
-
-<!--    <p class="ion-padding-start ion-padding-end">-->
-<!--      The Ionic Conference is a one-day conference featuring talks from the Ionic team. It is focused on Ionic applications being-->
-<!--      built with Ionic 2. This includes migrating apps from Ionic 1 to Ionic 2, Angular concepts, Webpack, Sass, and many-->
-<!--      other technologies used in Ionic 2. Tickets are completely sold out, and we’re expecting more than 1000 developers-->
-<!--      – making this the largest Ionic conference ever!-->
-<!--    </p>-->
-<!--  </div>-->
 </ion-content>
