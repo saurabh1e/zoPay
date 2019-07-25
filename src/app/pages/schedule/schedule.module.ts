@@ -7,7 +7,6 @@ import {SchedulePage} from './schedule';
 import {ScheduleFilterPage} from '../schedule-filter/schedule-filter';
 import {SchedulePageRoutingModule} from './schedule-routing.module';
 import {AutoCompleteModule} from 'ionic4-auto-complete';
-import {SearchPipe} from '../../providers/search.pipe';
 
 @NgModule({
   imports: [
@@ -20,7 +19,6 @@ import {SearchPipe} from '../../providers/search.pipe';
   declarations: [
     SchedulePage,
     ScheduleFilterPage,
-    SearchPipe
   ],
   entryComponents: [
     ScheduleFilterPage

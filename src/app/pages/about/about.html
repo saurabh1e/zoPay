@@ -1,14 +1,7 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
     <ion-title>Settings</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="presentPopover($event)">
-        <ion-icon slot="icon-only" name="more"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -20,21 +13,21 @@
 
   <form (ngSubmit)="CreateOrUpdate()">
     <ion-item>
-      <ion-label>Bank Name</ion-label>
+      <ion-label>Bank Name:</ion-label>
       <ion-input [(ngModel)]="bankDetails.bank_name" name="bank_name" type="text"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Account Number</ion-label>
+      <ion-label>Account Number:</ion-label>
       <ion-textarea [(ngModel)]="bankDetails.account_no" name="account_number"></ion-textarea>
     </ion-item>
 
     <ion-item>
-      <ion-label>Branch Name</ion-label>
+      <ion-label>Branch Name:</ion-label>
       <ion-textarea [(ngModel)]="bankDetails.branch_name" name="branch_name"></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-label>IFSC Code</ion-label>
+      <ion-label>IFSC Code:</ion-label>
       <ion-textarea [(ngModel)]="bankDetails.ifsc_code" name="ifsc_code"></ion-textarea>
     </ion-item>
 
